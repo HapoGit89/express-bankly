@@ -1,7 +1,59 @@
 
 const argv = process.argv
 
-const digitWords = {
+function timeWord(timeString)
+{
+
+    // Slice String into hours and minutes data
+    const hourString = timeString.slice(0,2)
+    const minuteString = timeString.slice(3,5)
+    console.log(`Time : ${timeString}, Hours: ${hourString}, Minutes: ${minuteString}`)
+    //*************** */
+
+
+    // First test for "noon" or "midnight"
+    if(timeString == "00:00"){
+        return "midnight"
+    }
+    if(timeString == "12:00"){
+        return "noon"
+    }
+    else {
+
+        // if not noon or midnight, the first part of the returning string has to be the number of hours as word
+        let timewords = ""
+        // Object which contains Hour String Digits with their corresponding Word Format
+        const hourLib = {
+            "00": "twelve",
+            "01": "one",
+            "02": "two",
+            "03": "three",
+            "04": "four",
+            "05": "five",
+            "06": "six",
+            "07": "seven",
+            "08": "eight",
+            "09": "nine",
+            "10": "ten",
+            "11": "eleven",
+            "12": "twelve",
+            "13": "one",
+            "14": "two",
+            "15": "three",
+            "16": "four",
+            "17": "five",
+            "18": "six",
+            "19": "seven",
+            "20": "eight",
+            "21": "nine",
+            "22": "ten",
+            "23": "eleven",
+            "24": "twelve"
+            
+
+        }
+           // Object which contains Minute String Digits with their corresponding Word Format
+        const digitWords = {
             "00": "zero",
             "01": "one",
             "02": "two",
@@ -63,60 +115,8 @@ const digitWords = {
             "58": "fifty eight",
             "59": "fifty nine"
 
-}
-
-
-
-
-function timeWord(timeString)
-{
-    // First slice String into hours and minutes data
-    const hourString = timeString.slice(0,2)
-    const minuteString = timeString.slice(3,5)
-    console.log(`Time : ${timeString}, Hours: ${hourString}, Minutes: ${minuteString}`)
-    //*************** */
-
-
-    // First test for "noon" or "midnight"
-    if(timeString == "00:00"){
-        return "midnight"
-    }
-    if(timeString == "12:00"){
-        return "noon"
-    }
-    else {
-
-        // if not noon or midnight, the first part of the returning string has to be the number of hours as word
-        let timewords = ""
-        const hourLib = {
-            "00": "zero",
-            "01": "one",
-            "02": "two",
-            "03": "three",
-            "04": "four",
-            "05": "five",
-            "06": "six",
-            "07": "seven",
-            "08": "eight",
-            "09": "nine",
-            "10": "ten",
-            "11": "eleven",
-            "12": "twelve",
-            "13": "one",
-            "14": "two",
-            "15": "three",
-            "16": "four",
-            "17": "five",
-            "18": "six",
-            "19": "seven",
-            "20": "eight",
-            "21": "nine",
-            "22": "ten",
-            "23": "eleven",
-            "24": "twelve"
-            
-
         }
+
         
         timewords += hourLib[hourString]
 
@@ -134,16 +134,24 @@ function timeWord(timeString)
             timewords += ` ${hourLib[minuteString]}`
         }
         else {timewords += ` ${digitWords[minuteString]}`}
-        return timewords
+
+        if (Number(hourString)<12){
+            timewords += " am"
+        }
+        else {
+            timewords += " pm"
+        }
+        return timewords 
+        
+        }
 
 
        
-    }
-
-
-
-
+    
+    
 }
 
 
 console.log(timeWord(argv[2]))
+
+module.exports = {timeWord}
