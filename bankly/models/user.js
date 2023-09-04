@@ -100,6 +100,7 @@ class User {
    **/
 
   static async get(username) {
+    
     const result = await db.query(
       `SELECT username,
                 first_name,
@@ -114,12 +115,11 @@ class User {
     const user = result.rows[0];
 
     if (!user) {
-      new ExpressError('No such user', 404);
+      throw new ExpressError('No such user', 404);  // FIXES BUG 5, added throw
     }
 
     return user;
   }
-
   /** Selectively updates user from given data
    *
    * Returns all data about user.
@@ -158,7 +158,7 @@ class User {
       [username]
     );
     const user = result.rows[0];
-
+     console.log(user)
     if (!user) {
       throw new ExpressError('No such user', 404);
     }

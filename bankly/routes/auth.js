@@ -40,7 +40,7 @@ router.post('/register', async function(req, res, next) {
 router.post('/login', async function(req, res, next) {
   try {
     const { username, password } = req.body;
-    let user = await User.authenticate(username, password);
+    let user = await User.authenticate(username, password);   // FIXES BUG 3 addaed await 
     console.log(user)
     const token = createTokenForUser(username, user.admin);
     return res.json({ token });
