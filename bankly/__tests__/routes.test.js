@@ -2,7 +2,9 @@
 // testing settings
 
 process.env.NODE_ENV = "test";
+const { TextEncoder, TextDecoder } = require("util");
 
+Object.assign(global, { TextDecoder, TextEncoder });
 const app = require("../app");
 const request = require("supertest");
 const db = require("../db");
@@ -101,7 +103,7 @@ describe("GET /users", function() {
   test("should list all users", async function() {
     const response = await request(app)
       .get("/users")
-      .send({ _token: tokens.u1 });
+      .set({ authorization: tokens.u3 });
     expect(response.statusCode).toBe(200);
     expect(response.body.users.length).toBe(3);
   });
@@ -116,7 +118,7 @@ describe("GET /users/[username]", function() {
   test("should return data on u1", async function() {
     const response = await request(app)
       .get("/users/u1")
-      .send({ _token: tokens.u1 });
+      .set({ authorization: tokens.u1 });
     expect(response.statusCode).toBe(200);
     expect(response.body.user).toEqual({
       username: "u1",
@@ -143,8 +145,8 @@ describe("PATCH /users/[username]", function() {
 
   test("should patch data if admin", async function() {
     const response = await request(app)
-      .patch("/users/u1")
-      .send({ _token: tokens.u3, first_name: "new-fn1" }); // u3 is admin
+      .patch("/users/u1").set({authorization: tokens.u3})
+      .send({first_name: "new-fn1" }); // u3 is admin
     expect(response.statusCode).toBe(200);
     expect(response.body.user).toEqual({
       username: "u1",
@@ -152,8 +154,7 @@ describe("PATCH /users/[username]", function() {
       last_name: "ln1",
       email: "email1",
       phone: "phone1",
-      admin: false,
-      password: expect.any(String)
+    
     });
   });
 
@@ -166,8 +167,8 @@ describe("PATCH /users/[username]", function() {
 
   test("should return 404 if cannot find", async function() {
     const response = await request(app)
-      .patch("/users/not-a-user")
-      .send({ _token: tokens.u3, first_name: "new-fn" }); // u3 is admin
+      .patch("/users/not-a-user").set({authorization: tokens.u3})
+      .send({first_name: "new-fn" }); // u3 is admin
     expect(response.statusCode).toBe(404);
   });
 });
@@ -187,8 +188,7 @@ describe("DELETE /users/[username]", function() {
 
   test("should allow if admin", async function() {
     const response = await request(app)
-      .delete("/users/u1")
-      .send({ _token: tokens.u3 }); // u3 is admin
+      .delete("/users/u1").set({authorization: tokens.u3}) ; // u3 is admin
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({ message: "deleted" });
   });

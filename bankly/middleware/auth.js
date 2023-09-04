@@ -7,7 +7,6 @@ const { SECRET_KEY } = require('../config');
 
 function requireLogin(req, res, next) {
   try {
-    console.log(req)
     if (req.curr_username) {
       return next();
     } else {
@@ -22,7 +21,6 @@ function requireLogin(req, res, next) {
 
 function requireAdmin(req, res, next) {
   try {
-    console.log(req)
     if (req.curr_admin) {
       return next();
     } else {
